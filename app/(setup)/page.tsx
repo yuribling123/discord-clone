@@ -1,0 +1,31 @@
+import InitialModal from "@/components/modals/initial-modal";
+import { db } from "@/lib/db";
+import { initialProfile } from "@/lib/initial-profile";
+import { redirect } from "next/navigation";
+
+
+const SetupPage = async () => {
+  const profile = await initialProfile();
+
+  const server = await db.server.findFirst({
+    where: {
+      members: {
+        some: {
+          profileId: profile.id
+        }
+      }
+    }
+  });
+
+  if (server){
+    return redirect(`/servers/${server.id}`);
+  }   
+  if (!server) {
+    return(<div className="flex justify-center items-center p-40"><InitialModal></InitialModal></div>);
+  }
+
+
+  // Add additional logic here if necessary
+};
+
+export default SetupPage;
