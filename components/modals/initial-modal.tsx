@@ -1,6 +1,6 @@
 "use client";
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
-import { DialogFooter, DialogHeader } from "../ui/dialog";
+
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useForm as useReactHookForm, } from 'react-hook-form';
 import { zodResolver as zd } from "@hookform/resolvers/zod";
 
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import {FileUpload} from "../file-upload";
 
 
 const formSchema = z.object({
@@ -56,14 +57,37 @@ const InitialModal = () => {
                     <DialogDescription className="text-center text-zinc-500">
                         Give your server a personality with a name and an image. You can always change it later.
                     </DialogDescription>
-                </DialogHeader> 
+                </DialogHeader>
 
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
                             <div className="flex items-center justify-center text-center">
-                                TODO: Image Upload
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">file upload </FormLabel>
+                                        <FormControl>
+
+                                            <FileUpload
+                                            endpoint = "serverImage"
+                                            value = {field.value}
+                                            onChange={field.onChange}
+                                            
+                                            >
+
+                                            </FileUpload>
+                                               
+                                        </FormControl>
+                                        <FormMessage></FormMessage>
+                                    </FormItem>
+                                )}
+                            />
+
+
                             </div>
                             <FormField
                                 control={form.control}
@@ -71,19 +95,19 @@ const InitialModal = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">Servername</FormLabel>
-                                        <FormControl> 
+                                        <FormControl>
                                             <Input disabled={isLoading}
-                                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                            placeholder="Enter server name" {...field} /> 
-                                         </FormControl>
-                                         <FormMessage></FormMessage>
+                                                className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                                placeholder="Enter server name" {...field} />
+                                        </FormControl>
+                                        <FormMessage></FormMessage>
                                     </FormItem>
                                 )}
                             />
                         </div>
                         <DialogFooter>
                             <Button variant="primary" disabled={isLoading}>Create</Button>
-                            
+
                         </DialogFooter>
                     </form>
                 </Form>

@@ -17,11 +17,16 @@ const SetupPage = async () => {
     }
   });
 
-  if (server){
+  if (server) {
     return redirect(`/servers/${server.id}`);
-  }   
+  }
   if (!server) {
-    return(<div className="flex justify-center items-center p-40"><InitialModal></InitialModal></div>);
+    return (
+     
+
+        <InitialModal></InitialModal>
+
+      );
   }
 
 
