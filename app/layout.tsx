@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ModalProvider } from "@/components/providers/modal-provider";
 
 const inter = Open_Sans({ subsets: ["latin"] });
 
@@ -21,12 +22,15 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
+          storageKey="discord-theme"
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
           >
-            
+        
+
+            <ModalProvider/>
             {children}
 
           </ThemeProvider>
@@ -34,4 +38,4 @@ export default function RootLayout({
       </html>
     </ClerkProvider>
   );
-}
+} 
