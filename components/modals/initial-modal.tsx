@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { useForm as useReactHookForm, } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver as zd } from "@hookform/resolvers/zod";
 
 import * as z from "zod"
@@ -9,25 +9,28 @@ import { useEffect, useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import {FileUpload} from "../file-upload";
+import { FileUpload } from "../file-upload";
+import { useRouter } from "next/navigation";
+import axios from "axios"
 
 
-const formSchema = z.object({
+const formSchema = z.object({ 
     name: z.string().min(1, {
-        message: "Server name is required."
+        message: "name is required."
     }),
     imageUrl: z.string().min(1, {
-        message: "Server image is required."
+        message: "image is required."
     })
 });
 
 
 const InitialModal = () => {
     const [isMounted, setIsMounted] = useState(false);
+    const router = useRouter();
 
     useEffect(() => { setIsMounted(true) }, [])
 
-    const form = useReactHookForm({
+    const form = useForm({
         resolver: zd(formSchema),
         defaultValues: {
             name: "",
@@ -37,9 +40,21 @@ const InitialModal = () => {
 
     const isLoading = form.formState.isSubmitting;
 
+    //values conforms to the shape defined in formSchema
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
+        console.log("clicked on submit called")
+        try {
+
+            await axios.post("/api/servers", values);
+            form.reset();
+            router.refresh();
+            window.location.reload(); 
+          } catch (error) {
+            console.log(error);
+          }          
     };
+
 
     if (!isMounted) { return null }
 
@@ -64,31 +79,22 @@ const InitialModal = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
                             <div className="flex items-center justify-center text-center">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">file upload </FormLabel>
-                                        <FormControl>
-
-                                            <FileUpload
-                                            endpoint = "serverImage"
-                                            value = {field.value}
-                                            onChange={field.onChange}
-                                            
-                                            >
-
-                                            </FileUpload>
-                                               
-                                        </FormControl>
-                                        <FormMessage></FormMessage>
-                                    </FormItem>
-                                )}
-                            />
+                                <FormField
+                                    control={form.control}
+                                    name="imageUrl"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <FileUpload endpoint="serverImage" value={field.value} onChange={field.onChange}></FileUpload>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
 
 
                             </div>
+
+
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -98,7 +104,9 @@ const InitialModal = () => {
                                         <FormControl>
                                             <Input disabled={isLoading}
                                                 className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                                                placeholder="Enter server name" {...field} />
+                                                placeholder="Enter server name"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage></FormMessage>
                                     </FormItem>
@@ -106,7 +114,8 @@ const InitialModal = () => {
                             />
                         </div>
                         <DialogFooter>
-                            <Button variant="primary" disabled={isLoading}>Create</Button>
+
+                            <Button variant="primary" disabled={isLoading} type="submit" >Create</Button>
 
                         </DialogFooter>
                     </form>
