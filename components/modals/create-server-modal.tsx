@@ -12,6 +12,7 @@ import { FileUpload } from "../file-upload";
 import { useRouter } from "next/navigation";
 import axios from "axios"
 import { useModal } from "@/hook/use-modal-store";
+import { FileUploadAddServer } from "../file-upload-add-server";
 
 
 const formSchema = z.object({ 
@@ -45,14 +46,13 @@ export const CreateServerModal = () => {
 
     //values conforms to the shape defined in formSchema
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
-        console.log("clicked on submit called")
         try {
 
             await axios.post("/api/servers", values);
             form.reset();
             router.refresh();
-           
+            form.reset();
+            onClose();
           } catch (error) {
             console.log(error);
           }          
@@ -61,6 +61,7 @@ export const CreateServerModal = () => {
     const handleClose = () => {
         form.reset();
         onClose();
+        console.log("handleclose called")
       }
       
 
@@ -89,7 +90,9 @@ export const CreateServerModal = () => {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
+
                                                 {/* <FileUpload endpoint="serverImage" value={field.value} onChange={field.onChange}></FileUpload> */}
+                                              <FileUploadAddServer  endpoint="serverImage" value={field.value} onChange={field.onChange}/>
                                             </FormControl>
                                         </FormItem>
                                     )}

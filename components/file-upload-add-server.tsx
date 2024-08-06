@@ -7,17 +7,17 @@ import Image from "next/image";
 
 
 
-interface FileUploadProps {
+interface FileUploadAddServerProps {
   onChange: (url?: string) => void;
   value: string;
   endpoint: "messageFile" | "serverImage";
 }
 
-export const FileUpload = ({
+export const FileUploadAddServer = ({
   onChange,
   value,
   endpoint
-}: FileUploadProps) => {
+}: FileUploadAddServerProps) => {
 
   const fileType = value?.split(".").pop();
 
