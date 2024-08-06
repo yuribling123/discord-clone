@@ -20,7 +20,8 @@ export const ServerHeader = ({
     const isModerator = isAdmin || role === MemberRole.MODERATOR;
     const {onOpen} = useModal();
 
-    const inviteOnclick = ()=>{onOpen("invite", {server});console.log("invite click")+server.inviteCode}
+    const inviteOnclick = ()=>{onOpen("invite", {server});console.log("invite click")}
+    const editOnclick = ()=>{onOpen("editServer", {server});console.log("edit click")}
 
 
     return (
@@ -51,6 +52,7 @@ export const ServerHeader = ({
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
+                        onClick={editOnclick}
                         className=" px-3 py-2 text-sm cursor-pointer"
                     >
                         Server Settings
