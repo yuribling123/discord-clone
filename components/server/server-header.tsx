@@ -20,6 +20,7 @@ export const ServerHeader = ({
     const isModerator = isAdmin || role === MemberRole.MODERATOR;
     const {onOpen} = useModal();
 
+    const inviteOnclick = ()=>{onOpen("invite", {server});console.log("invite click")+server.inviteCode}
 
 
     return (
@@ -41,7 +42,7 @@ export const ServerHeader = ({
             >
                 {isModerator && (
                     <DropdownMenuItem
-                        onClick={()=>onOpen("invite", {server})}
+                        onClick={inviteOnclick}
                         className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
                     >
                         Invite People

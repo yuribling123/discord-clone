@@ -1,20 +1,20 @@
 "use client";
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { useForm } from 'react-hook-form';
-import { zodResolver as zd } from "@hookform/resolvers/zod";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 import * as z from "zod"
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form";
+
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { FileUpload } from "../file-upload";
+
 import { useRouter } from "next/navigation";
 import axios from "axios"
 import { useModal } from "@/hook/use-modal-store";
-import { FileUploadAddServer } from "../file-upload-add-server";
+
 import { Label } from "../ui/label";
-import { Copy, RefreshCw } from "lucide-react";
+import { Check, Copy, RefreshCw } from "lucide-react";
+import { useOrigin } from "@/hook/use-origin";
+import { useState } from "react";
 
 
 const formSchema = z.object({
@@ -29,11 +29,46 @@ const formSchema = z.object({
 
 export const InviteModal = () => {
 
-    const { isOpen, onClose, type } = useModal();
+    const { onOpen, isOpen, onClose, type, data } = useModal();
+    //console.log("data" + data.server);
 
     const router = useRouter();
 
     const isModalOpen = isOpen && type === "invite";
+
+    const { server } = data;
+    const origin = useOrigin();
+
+    const [copied, setCopied] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
+
+    const onCopy = () => {
+        navigator.clipboard.writeText(inviteUrl);
+        setCopied(true);
+
+        setTimeout(() => {
+            setCopied(false);
+        }, 1000);
+    };
+
+
+    const onNew = async () => {
+        try {
+            setIsLoading(true);
+           
+            const response = await axios.patch(`/api/servers/${server?.id}/invite-code`)
+
+            console.log("response:"+ response)
+            onOpen("invite", { server: response.data});
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     return (
@@ -53,15 +88,22 @@ export const InviteModal = () => {
                     </Label>
                     <div className="flex items-center mt-2 gap-x-2">
                         <Input
+                            disabled={isLoading}
                             className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                            value="invite-link"
+                            value={inviteUrl}
                         />
-                        <Button size="icon">
-                            <Copy className="w-4 h-4" />
+                        <Button size="icon" onClick={onCopy} disabled={isLoading}>
+
+                            {
+                                copied
+                                    ? <Check className="w-4 h-4" />
+                                    : <Copy className="w-4 h-4" />
+                            }
                         </Button>
 
                     </div>
                     <Button
+                        onClick={onNew}
                         variant="link"
                         size="sm"
                         className="text-xs text-zinc-500 mt-4"
@@ -71,9 +113,6 @@ export const InviteModal = () => {
                     </Button>
 
                 </div>
-
-
-
 
             </DialogContent>
         </Dialog>
