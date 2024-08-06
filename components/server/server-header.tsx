@@ -22,6 +22,7 @@ export const ServerHeader = ({
 
     const inviteOnclick = ()=>{onOpen("invite", {server});console.log("invite click")}
     const editOnclick = ()=>{onOpen("editServer", {server});console.log("edit click")}
+    const createChannelOnclick = ()=>{onOpen("createChannel", {server});console.log("create channel click")}
 
 
     return (
@@ -69,6 +70,7 @@ export const ServerHeader = ({
                 )}
                 {isModerator && (
                     <DropdownMenuItem
+                    onClick={createChannelOnclick}
                         className=" px-3 py-2 text-sm cursor-pointer"
                     >
                         Create Channel
