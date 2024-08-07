@@ -15,8 +15,7 @@ import axios from "axios"
 import { useModal } from "@/hook/use-modal-store";
 
 import { ChannelType } from "@prisma/client";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
-import { SelectValue } from "@radix-ui/react-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 
 
@@ -67,6 +66,7 @@ export const CreateChannelModal = () => {
                 }
             });
 
+            console.log("form values:"+values.type)
             await axios.post(url, values);
 
 
@@ -82,7 +82,7 @@ export const CreateChannelModal = () => {
     const handleClose = () => {
         form.reset();
         onClose();
-        console.log("handleclose called")
+        //console.log("handleclose called")
     }
 
 
@@ -127,7 +127,10 @@ export const CreateChannelModal = () => {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Channel Type</FormLabel>
+
                                         <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
                                             disabled={isLoading}
                                         >
                                             <FormControl>
@@ -151,9 +154,9 @@ export const CreateChannelModal = () => {
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
-
-
                                         </Select>
+
+
                                         <FormMessage />
                                     </FormItem>
                                 )}
