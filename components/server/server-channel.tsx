@@ -6,8 +6,10 @@ import { channel } from "diagnostics_channel";
 
 
 import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter  } from "next/navigation";
 import { ActionTooltip } from "../action-tooltip";
+import { ModalType, useModal } from "@/hook/use-modal-store";
+
 
 interface ServerChannelProps {
     channel: Channel;
@@ -31,10 +33,24 @@ export const ServerChannel = ({
 
     const Icon = iconMap[channel.type];
     const params = useParams();
+    const route = useRouter();
 
+    const {onOpen} = useModal();
+    
+    const onClick =()=>{
+        console.log("onclick clicked")
+        route .push (`/servers/${params?.serverId}/channels/${channel.id}`)  
+    }
+
+    const onAction = (e: React.MouseEvent, action: ModalType) => {
+        // prevent the parent element's event listener from being triggered
+        e.stopPropagation();
+        onOpen(action,{channel,server});
+      }
+      
     return (
         <button
-            onClick={() => { }}
+            onClick={onClick}
             className={cn(
                 "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1",
                 params?.channelId == channel.id && "bg-zinc-700"
@@ -53,7 +69,8 @@ export const ServerChannel = ({
                 {channel.name !== "general" && role !== MemberRole.GUEST && (
                     <>
                         <ActionTooltip label="Edit" side="top">
-                            <Edit className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition" />
+                            <Edit onClick={(e)=>onAction(e,"editChannel")}
+                            className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition" />
                         </ActionTooltip>
                         <ActionTooltip label="Delete" side="top">
                             <Trash className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition" />

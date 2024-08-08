@@ -1,12 +1,13 @@
 // create a custom hook. Call onOpen to open the modal and onClose to close it
-import { ChannelType, Server } from "@prisma/client";
+import { Channel, ChannelType, Server } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = "createServer"| "invite"|"editServer"|"createChannel"|"member";
+export type ModalType = "createServer"| "invite"|"editServer"|"createChannel"|"editChannel"|"member";
 
 interface ModalData{
   server?:Server
   channelType?: ChannelType
+  channel?: Channel
 }
 
 interface ModalStore {
