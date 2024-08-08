@@ -31,6 +31,7 @@ const ServerMember = (
     const icon = roleIconMap[member.role];
 
     const onClick = () => {
+        console.log("on clicked");
         router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
       }
       
