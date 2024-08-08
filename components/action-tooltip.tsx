@@ -19,7 +19,7 @@ interface ActionTooltipProps {
             {children}
           </TooltipTrigger>
           <TooltipContent side={side} align={align}>
-            <p className="font-semibold text-sm capitalize">{label.toLowerCase()}</p>
+            <div className="font-normal text-sm capitalize bg-black p-1 m-1 rounded-sm ">{label.toLowerCase()}</div>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

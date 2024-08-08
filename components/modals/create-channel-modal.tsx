@@ -16,12 +16,15 @@ import { useModal } from "@/hook/use-modal-store";
 
 import { ChannelType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useEffect } from "react";
 
 
 
 export const CreateChannelModal = () => {
 
-    const { isOpen, onClose, type } = useModal();
+    const { isOpen, onClose, type, data } = useModal();
+
+    const { channelType } = data;
 
     const router = useRouter();
 
@@ -45,7 +48,7 @@ export const CreateChannelModal = () => {
         resolver: zd(formSchema),
         defaultValues: {
             name: "",
-            type: ChannelType.TEXT,
+            type: channelType || ChannelType.TEXT,
 
         }
     });
@@ -66,7 +69,7 @@ export const CreateChannelModal = () => {
                 }
             });
 
-            console.log("form values:"+values.type)
+            console.log("form values:" + values.type)
             await axios.post(url, values);
 
 
@@ -84,6 +87,15 @@ export const CreateChannelModal = () => {
         onClose();
         //console.log("handleclose called")
     }
+
+    useEffect(() => {
+        if (channelType) {
+            form.setValue("type", channelType);
+        } else {
+            form.setValue("type", ChannelType.TEXT);
+        }
+    }, [channelType, form]);
+
 
 
 
