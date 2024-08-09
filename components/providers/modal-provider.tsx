@@ -6,6 +6,7 @@ import { CreateServerModal } from "../modals/create-server-modal";
 import { InviteModal } from "../modals/invite-modal";
 import { EditServerModal } from "../modals/edit-server-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
+import MessageFileModal from "../modals/message-file-modal";
 
 
 export const ModalProvider = () => {
@@ -25,6 +26,7 @@ export const ModalProvider = () => {
             <InviteModal/>
             <EditServerModal/>
             <CreateChannelModal/>
+            <MessageFileModal/>
         </>
     );
 };
