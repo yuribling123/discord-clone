@@ -145,7 +145,9 @@ export default async function handler(
 
         const updateKey = `chat:${channelId}:messages:update`;
 
+        //emit a message to all clients  connected to the Socket.IO server
         res?.socket?.server?.io?.emit(updateKey, message);
+        //When the event is received, the client executes the callback function processing the message socket.on...
 
         return res.status(200).json(message);
 

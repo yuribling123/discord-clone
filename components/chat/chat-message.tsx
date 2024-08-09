@@ -5,8 +5,9 @@ import { ChatWelcome } from "./chat-welcome";
 import { useChatQuery } from "@/hook/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { Fragment } from "react";
-import {format} from "date-fns"
+import { format } from "date-fns"
 import { ChatItem } from "./chat-item";
+import { useChatSocket } from "@/hook/use-chat-socket";
 
 
 const DATE_FORMAT = "d MMM yyyy HH:mm";
@@ -41,6 +42,9 @@ export const ChatMessages = ({
 }: ChatMessagesProps) => {
 
     const queryKey = `chat:${chatId}`;
+    const addKey = `chat:${chatId}:messages`;
+    const updateKey = `chat:${chatId}:messages:update`;
+
 
     const {
         data,
@@ -54,6 +58,9 @@ export const ChatMessages = ({
         paramKey,
         paramValue,
     });
+
+    //
+    useChatSocket({queryKey,addKey,updateKey})
 
     if (status === "pending") {
         return (
@@ -100,10 +107,10 @@ export const ChatMessages = ({
                         fileUrl={message.fileUrl}
                         deleted={message.delete}
                         timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-                        member={message.member} 
-                        isUpdated={message.updatedAt!==message.createdAt} 
-                        socketUrl={socketUrl} 
-                        socketQuery={socketQuery}                />
+                        member={message.member}
+                        isUpdated={message.updatedAt !== message.createdAt}
+                        socketUrl={socketUrl}
+                        socketQuery={socketQuery} />
                 ))}  </Fragment>))}
             </div>
         </div>
