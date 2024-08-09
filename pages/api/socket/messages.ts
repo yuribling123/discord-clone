@@ -1,4 +1,4 @@
-;
+//add a message to a specific chat channel in a server
 import { currentProfilePages } from "@/lib/current-profile-pages";
 import { db } from "@/lib/db";
 import { NextApiResponseServerIo } from "@/type";

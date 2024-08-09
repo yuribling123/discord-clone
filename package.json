@@ -29,6 +29,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "date-fns": "^3.6.0",
     "dropzone": "^6.0.0-beta.2",
     "emoji-mart": "^5.6.0",
     "i": "^0.3.7",

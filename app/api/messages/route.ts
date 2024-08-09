@@ -1,3 +1,4 @@
+// retrieves a paginated list of messages from a specific chat channel, ensuring the user is authorized before returning the messages along with a cursor for fetching the next batch
 import { currentProfile } from "@/lib/current-profile";
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
