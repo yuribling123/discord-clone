@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import axios from "axios";
 import qs from "query-string"
+import { useModal } from "@/hook/use-modal-store";
 
 interface ChatItemProps {
     id: string;
@@ -60,6 +61,12 @@ export const ChatItem = (
     }, []);
 
 
+    const { onOpen } = useModal();
+
+
+
+
+
     const formSchema = z.object({
         content: z.string().min(1),
     });
@@ -99,21 +106,21 @@ export const ChatItem = (
     const isLoading = form.formState.isSubmitting;
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-      try {
-        const url = qs.stringifyUrl({
-          url: `${socketUrl}/${id}`,
-          query: socketQuery,
-        });
-    
-        await axios.patch(url, values);
+        try {
+            const url = qs.stringifyUrl({
+                url: `${socketUrl}/${id}`,
+                query: socketQuery,
+            });
 
-        form.reset();
-        setIsEditing(false);
-      } catch (error) {
-        console.log(error);
-      }
+            await axios.patch(url, values);
+
+            form.reset();
+            setIsEditing(false);
+        } catch (error) {
+            console.log(error);
+        }
     };
-    
+
 
 
 
@@ -197,7 +204,7 @@ export const ChatItem = (
                                             <FormControl>
                                                 <div className="relative w-full">
                                                     <Input
-                                                        disabled = {isLoading}
+                                                        disabled={isLoading}
                                                         className="p-2 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200 "
                                                         placeholder="Edited Message"
                                                         {...field}
@@ -208,7 +215,7 @@ export const ChatItem = (
                                     )}
                                 />
 
-                                <Button size="sm" variant="primary" disabled = {isLoading}> Save </Button>
+                                <Button size="sm" variant="primary" disabled={isLoading}> Save </Button>
                             </form>
                             <span className="text-[10px] mt-1  text-zinc-400">Press escape to cancel, enter to save</span>
                         </Form>
@@ -235,7 +242,11 @@ export const ChatItem = (
                         </ActionTooltip>
                     )}
                     <ActionTooltip label="Delete">
-                        <Trash
+                        <Trash onClick={() => onOpen("deleteMessage", {
+                            apiUrl: `${socketUrl}/${id}`,
+                            query: socketQuery,
+                        })}
+
                             className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
                         />
                     </ActionTooltip>
